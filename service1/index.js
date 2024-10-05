@@ -1,5 +1,6 @@
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors');
 
 const app = express();
 const PORT = 8199;
@@ -13,11 +14,13 @@ function getInfo() {
     };
 }
 
+app.use(cors());
+
 app.get('/info', async (req, res) => {
     const service1Info = getInfo();
     
     try {
-        const service2Info = await axios.get('http://service2:8200/info');
+        const service2Info = await axios.get('http://devops-service2-1:8300/info');
         res.json({
             service1: service1Info,
             service2: service2Info.data

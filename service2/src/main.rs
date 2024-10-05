@@ -34,7 +34,8 @@ fn info() -> Json<Info> {
 fn rocket() -> _ {
     rocket::build().mount("/", routes![info])
         .configure(rocket::Config {
-            port: 8200,
+            port: 8300,
+            address: "0.0.0.0".parse().unwrap(),
             ..rocket::Config::default()
         })
 }
