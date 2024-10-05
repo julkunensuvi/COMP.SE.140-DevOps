@@ -1,0 +1,5 @@
+The used LLM tool was OpenAi GPT-4o model
+o Motivation/reason to use LLM:  Saves time with writing the parts of the code that I already understand -> Can describe the logic and what I need the code in the prompt.  
+o How and why LLM helped: I prefer to write helper functions, like JSON formatting etc. with an llm-model (Commented those functions on the code)
+o What kind of mistakes LLM did: Works well for simple and isolated tasks, sometimes uses old packages/functions and overly complicated code
+o What were things that LLM was not able to provide: Works well with small/isolated units of code, don't see a point with writing larger programs with it.
