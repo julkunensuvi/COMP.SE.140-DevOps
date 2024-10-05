@@ -16,14 +16,14 @@ function getInfo() {
 
 app.use(cors());
 
-app.get('/info', async (req, res) => {
+app.get('/',  async (req, res) => {
     const service1Info = getInfo();
     
     try {
-        const service2Info = await axios.get('http://devops-service2-1:8300/info');
+         const service2Info = await axios.get('http://service2:8300/info');
         res.json({
             service1: service1Info,
-            service2: service2Info.data
+             service2: service2Info.data
         });
     } catch (error) {
         res.status(500).json({ error: 'Failed to connect to Service2' });
