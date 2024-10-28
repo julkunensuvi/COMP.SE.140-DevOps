@@ -3,6 +3,7 @@ const axios = require('axios');
 const cors = require('cors');
 const { execSync } = require('child_process');
 const app = express();
+const { exec } = require('child_process');
 const PORT = 8199;
 
 // Openai: Helper function to clean and format the processes list
@@ -42,14 +43,29 @@ app.get('/',  async (req, res) => {
     const service1Info = getInfo();
     
     try {
-         const service2Info = await axios.get('http://service2:8300/info');
+        const service2Info = await axios.get('http://service2:8300/info');
         res.json({
             service1: service1Info,
              service2: service2Info.data
         });
+        // Delay
+        setTimeout(() => {
+            console.log('Ready for a request');
+          }, 2000);
     } catch (error) {
         res.status(500).json({ error: 'Failed to connect to Service2' });
     }
+});
+
+app.post('/shutdown', (req, res) => {
+    res.send('Shutting down...');
+    exec('docker compose down', (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error executing shutdown: ${error.message}`);
+            return;
+        }
+        console.log(`Shutdown: ${stdout}`);
+    });
 });
 
 app.listen(PORT, () => {
