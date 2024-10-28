@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Service</title>
+</head>
+<body>
+    <h1>Make a request!</h1>
+    <button id="requestButton">REQUEST</button>
+    <button id="stopButton">STOP</button>
+    <textarea id="responseArea" rows="10" cols="50"></textarea>
+
+    <script>
+        document.getElementById('requestButton').onclick = async function() {
+            try {
+                const response = await fetch('/');
+                const text = await response.text();
+                document.getElementById('responseArea').value = text;
+            } catch (error) {
+                console.error('Error making request:', error);
+            }
+        };
+
+        document.getElementById('stopButton').onclick = function() {
+            fetch('/shutdown', { method: 'POST' });
+        };
+    </script>
+</body>
+</html>
