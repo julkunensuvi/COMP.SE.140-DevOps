@@ -57,15 +57,27 @@ app.get('/',  async (req, res) => {
     }
 });
 
-app.post('/shutdown', (req, res) => {
-    res.send('Shutting down...');
-    exec('docker compose down', (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error executing shutdown: ${error.message}`);
-            return;
-        }
-        console.log(`Shutdown: ${stdout}`);
-    });
+app.post('/shutdown', async (req, res) => {
+    try {
+        console.log('Shutting down all containers...');
+
+        const containers = await axios.get('http://localhost/containers/json', {
+            socketPath: '/var/run/docker.sock'
+        });
+
+        // Stop all containers concurrently
+        const stopPromises = containers.data.map(container => 
+            axios.post(`http://localhost/containers/${container.Id}/stop`, {}, {
+                socketPath: '/var/run/docker.sock'
+            })
+        );
+        await Promise.all(stopPromises);
+        console.log('All containers have been stopped.');
+
+    } catch (error) {
+        console.error(`Error during shutdown: ${error.message}`);
+        res.status(500).send('Failed to completely shut down the system.');
+    }
 });
 
 app.listen(PORT, () => {
