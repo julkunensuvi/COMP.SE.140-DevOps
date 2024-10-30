@@ -60,7 +60,6 @@ app.get('/',  async (req, res) => {
 app.post('/shutdown', async (req, res) => {
     try {
         console.log('Shutting down all containers...');
-
         const containers = await axios.get('http://localhost/containers/json', {
             socketPath: '/var/run/docker.sock'
         });
@@ -71,7 +70,7 @@ app.post('/shutdown', async (req, res) => {
                 socketPath: '/var/run/docker.sock'
             })
         );
-        await Promise.all(stopPromises);
+        await Promise.all(stopPromises); // This doesn't really work as containers have already been shut down at this point... 
         console.log('All containers have been stopped.');
 
     } catch (error) {
