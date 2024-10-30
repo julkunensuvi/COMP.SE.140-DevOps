@@ -1,1 +1,0 @@
-Containers isolate processes but share the OS kernel, they also can optionally use host IP, ports, etc. (host's network). Container can also read/write host data by mounting a directory or files -> volumes -> data persistence

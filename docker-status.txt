@@ -1,8 +1,11 @@
-CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS         PORTS                    NAMES
-8b3ac349a76b   devops-service1   "docker-entrypoint.s…"   8 minutes ago   Up 8 minutes   0.0.0.0:8199->8199/tcp   service1
-9b69a35bfd82   devops-service2   "./target/release/se…"   8 minutes ago   Up 8 minutes   8300/tcp                 service2
-NETWORK ID     NAME             DRIVER    SCOPE
-714b085c7d6d   bridge           bridge    local
-7391364f79a5   devops_network   bridge    local
-377391f221b2   host             host      local
-479d96eb9eb9   none             null      local
+CONTAINER ID   IMAGE             COMMAND                  CREATED          STATUS          PORTS                  NAMES
+8155d2cec240   devops-nginx      "/docker-entrypoint.…"   40 seconds ago   Up 37 seconds   0.0.0.0:8081->80/tcp   nginx
+263b7404535c   devops-service1   "docker-entrypoint.s…"   40 seconds ago   Up 39 seconds   8199/tcp               devops-service1-2
+93073d15222a   devops-service1   "docker-entrypoint.s…"   40 seconds ago   Up 38 seconds   8199/tcp               devops-service1-3
+514756de1184   devops-service1   "docker-entrypoint.s…"   40 seconds ago   Up 38 seconds   8199/tcp               devops-service1-1
+4b4b2930a043   devops-service2   "./target/release/se…"   40 seconds ago   Up 39 seconds   8300/tcp               service2
+NETWORK ID     NAME                       DRIVER    SCOPE
+a3d6f867a6af   devops_backend             bridge    local
+673faafd047f   devops_frontend            bridge    local
+377391f221b2   host                       host      local
+479d96eb9eb9   none                       null      local
