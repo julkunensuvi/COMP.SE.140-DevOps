@@ -1,43 +1,17 @@
 services:
-  service1_1:
-    container_name: service1_1
-    build: ./service1
-    expose:
-      - 8199 
-    depends_on:
-      - service2
-    networks:
-      - frontend
-      - backend
-    volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-
-  service1_2:
-    container_name: service1_2
+  service1:
     build: ./service1
     expose:
       - 8199
-    depends_on:
-      - service2
     networks:
-      - frontend
       - backend
     volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-
-  service1_3:
-    container_name: service1_3
-    build: ./service1
-    expose:
-      - 8199
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - service2
-    networks:
-      - frontend
-      - backend
-    volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
-
+    deploy:
+      replicas: 3
+    
   service2:
     container_name: service2
     build: ./service2
@@ -53,11 +27,10 @@ services:
       - "8081:80"
     networks:
       - frontend
+      - backend
     depends_on:
-      - service1_1
-      - service1_2
-      - service1_3
-
+      - service1
+  
 networks:
   frontend:
     driver: bridge
