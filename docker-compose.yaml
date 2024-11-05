@@ -24,7 +24,7 @@ services:
     container_name: nginx
     build: ./nginx
     ports:
-      - "8081:80"
+      - "8198:80"
     networks:
       - frontend
       - backend

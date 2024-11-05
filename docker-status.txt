@@ -1,5 +1,5 @@
 CONTAINER ID   IMAGE             COMMAND                  CREATED          STATUS          PORTS                  NAMES
-8155d2cec240   devops-nginx      "/docker-entrypoint.…"   40 seconds ago   Up 37 seconds   0.0.0.0:8081->80/tcp   nginx
+8155d2cec240   devops-nginx      "/docker-entrypoint.…"   40 seconds ago   Up 37 seconds   0.0.0.0:8198->80/tcp   nginx
 263b7404535c   devops-service1   "docker-entrypoint.s…"   40 seconds ago   Up 39 seconds   8199/tcp               devops-service1-2
 93073d15222a   devops-service1   "docker-entrypoint.s…"   40 seconds ago   Up 38 seconds   8199/tcp               devops-service1-3
 514756de1184   devops-service1   "docker-entrypoint.s…"   40 seconds ago   Up 38 seconds   8199/tcp               devops-service1-1
