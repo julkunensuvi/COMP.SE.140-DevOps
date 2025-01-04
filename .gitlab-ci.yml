@@ -5,6 +5,7 @@ stages:
 
 build:
   stage: build
+  image: docker/compose:latest
   script:
     - echo "Building..."
     - docker-compose build
