@@ -5,27 +5,16 @@ stages:
 
 build:
   stage: build
-  image: docker:24.0.6
-  services:
-    - docker:dind
-  variables:
-    DOCKER_TLS_CERTDIR: ""
   script:
     - echo "Building..."
     - docker-compose build
 
 test:
   stage: test
-  image: docker/compose:latest
   script:
     - echo "Running tests... TODO"
-    - docker-compose up -d
-    - docker-compose down
 
 deploy:
   stage: deploy
-  image: docker/compose:latest
   script:
     - echo "Deploying..."
-    - docker-compose down
-    - docker-compose up -d
