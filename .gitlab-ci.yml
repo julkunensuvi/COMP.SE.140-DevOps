@@ -1,0 +1,24 @@
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script:
+    - echo "Building..."
+    - docker-compose -f docker-compose.yml build
+
+test:
+  stage: test
+  script:
+    - echo "Running tests... TODO"
+    - docker-compose -f docker-compose.yml up -d
+    - docker-compose -f docker-compose.yml down
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploying..."
+    - docker-compose -f docker-compose.yml down
+    - docker-compose -f docker-compose.yml up -d
