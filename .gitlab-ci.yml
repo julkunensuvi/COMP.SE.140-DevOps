@@ -5,7 +5,7 @@ stages:
 
 build:
   stage: build
-  image: docker/compose:latest
+  image: docker:24.0.6
   script:
     - echo "Using Docker Compose version:"
     - docker-compose version
