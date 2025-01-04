@@ -5,7 +5,11 @@ stages:
 
 build:
   stage: build
-  image: docker/compose:latest
+  image: docker:24.0.6
+  services:
+    - docker:dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
   script:
     - echo "Building..."
     - docker-compose build
