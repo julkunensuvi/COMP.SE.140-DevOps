@@ -1,7 +1,19 @@
 stages:
+  - debug
   - build
   - test
   - deploy
+
+debug:
+  stage: build
+  image: docker:24.0.6
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker info
 
 build:
   stage: build
