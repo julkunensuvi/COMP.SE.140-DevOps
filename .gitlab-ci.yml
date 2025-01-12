@@ -13,8 +13,19 @@ build:
 
 test:
   stage: test
+  image: node:16
+  services:
+    - docker:dind
+  before_script:
+    - echo "Docker Compose up..."
+    - docker-compose up -d  
+    - npm install           
   script:
-    - echo "Running tests... TODO"
+    - echo "Running tests..."
+    - npm test              
+  after_script:
+    - echo "Shutting down services..."
+    - docker-compose down
 
 deploy:
   stage: deploy
