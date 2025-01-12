@@ -1,34 +1,10 @@
 stages:
-  - debug
   - build
   - test
   - deploy
 
-debug:
-  stage: build
-  image: docker:24.0.6
-  services:
-   - name: docker:dind
-     alias: thedockerhost
-
-  variables:
-    DOCKER_HOST: tcp://thedockerhost:2375/
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-  script:
-    - docker info
-
 build:
   stage: build
-  image: docker:20-dind
-  services:
-    - name: docker:20-dind
-      command: ["--tls=false"]
-  variables:
-    DOCKER_DRIVER: overlay
-    DOCKER_HOST: tcp://127.0.0.1:2375/
-    DOCKER_TLS_CERTDIR: ""
-
   script:
     - echo "Using Docker Compose version:"
     - docker-compose version
