@@ -16,6 +16,7 @@ test:
   before_script:
     - echo "Docker Compose up..."
     - docker-compose up -d  
+    - echo $PATH
     - node -v
     - npm -v
     - npm install           
