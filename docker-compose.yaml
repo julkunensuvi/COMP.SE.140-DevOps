@@ -32,6 +32,14 @@ services:
       - backend
     depends_on:
       - service1
+      - api_gateway
+
+  api_gateway:
+    build: ./api_gateway
+    ports:
+      - "8197:8197"
+    networks:
+      - backend
   
 networks:
   frontend:
