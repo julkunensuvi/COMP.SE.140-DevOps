@@ -1,0 +1,27 @@
+{
+  "name": "devops",
+  "version": "1.0.0",
+  "description": "DevOps course work",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julkunensuvi/COMP.SE.140-DevOps.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/julkunensuvi/COMP.SE.140-DevOps/issues"
+  },
+  "homepage": "https://github.com/julkunensuvi/COMP.SE.140-DevOps#readme",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "jest": "^29.7.0"
+  }
+}
