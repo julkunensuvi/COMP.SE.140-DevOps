@@ -1,15 +1,15 @@
 const axios = require('axios');
 
-const BASE_URL = 'http://localhost:8198/api';
+const BASE_URL = 'http://localhost:8197'; 
 
-
-describe('API Tests', () => {
-    test('GET /api/ should return combined service info', async () => {
-        const response = await axios.get(`${BASE_URL}/`);
-        expect(response.status).toBe(200);
-        expect(response.data).toHaveProperty('service1');
-        expect(response.data).toHaveProperty('service2');
+describe('GET /state', () => {
+    it('should return the initial state as INIT', async () => {
+        const res = await axios.get(`${BASE_URL}/state`, {
+            headers: {
+                'Accept': 'text/plain',
+            },
+        });
+        expect(res.status).toBe(200);
+        expect(res.data).toBe('INIT');
     });
-
 });
-
