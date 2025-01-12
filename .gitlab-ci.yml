@@ -6,8 +6,6 @@ stages:
 build:
   stage: build
   script:
-    - echo "Using Docker Compose version:"
-    - docker-compose version
     - echo "Building..."
     - docker-compose build
 
@@ -16,9 +14,6 @@ test:
   before_script:
     - echo "Docker Compose up..."
     - docker-compose up -d  
-    - echo $PATH
-    - node -v
-    - npm -v
     - npm install           
   script:
     - echo "Running tests..."
