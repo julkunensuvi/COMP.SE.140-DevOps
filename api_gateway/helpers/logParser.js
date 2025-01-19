@@ -9,13 +9,14 @@ const parseNginxLog = (logFilePath) => {
             console.log('Line:', line);
 
             const match = line.match(
-                /(\S+) - \[(\d+\/\w+\/\d+:\d+:\d+:\d+ \+\d+)\] "GET \/ HTTP\/1\.1" (\d+)/
+                /(\S+) - \[(\d+\/\w+\/\d+:\d+:\d+:\d+ \+\d+)\] "GET (\/[^\s]*) HTTP\/1\.1" (\d+)/
             );
 
             if (match) {
-                const username = match[1];
-                const rawTimestamp = match[2];
-                const statusCode = match[3];
+                const username = match[1]; // E.g., 'test' or '-'
+                const rawTimestamp = match[2]; // E.g., '19/Jan/2025:10:47:42 +0000'
+                const path = match[3]; // E.g., '/' or '/api/'
+                const statusCode = match[4]; // E.g., '200'
 
                 if (statusCode === '200') {
                     const formattedTimestamp = rawTimestamp.replace(
@@ -25,10 +26,10 @@ const parseNginxLog = (logFilePath) => {
 
                     console.log('Formatted Timestamp:', formattedTimestamp);
                     console.log(
-                        `Authenticated user: ${username}, Time: ${formattedTimestamp}, Status: ${statusCode}`
+                        `Authenticated user: ${username}, Path: ${path}, Time: ${formattedTimestamp}, Status: ${statusCode}`
                     );
 
-                    return { success: true, timestamp: formattedTimestamp };
+                    return { success: true, timestamp: formattedTimestamp, path };
                 }
             } else {
                 console.warn('Unmatched line:', line);
