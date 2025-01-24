@@ -8,14 +8,25 @@ const AUTH_CREDENTIALS = {
     password: 'Kahvikuppi',
 };
 
-
+beforeEach(async () => {
+    try {
+        const res = await axios.put(`${BASE_URL}/state`, 'INIT', {
+            headers: {
+                'Content-Type': 'text/plain',
+            },
+        });
+        console.log('State reset to INIT:', res.status); // Log for debugging
+    } catch (error) {
+        console.error('Error resetting state to INIT:', error.response?.data || error.message);
+    }
+});
 
 describe('GET /state', () => {
     it('should return the initial state as INIT', async () => {
 
-        const res = await axios.put(`${BASE_URL}/state`, { state: 'INIT' }, {
+        const res = await axios.put(`${BASE_URL}/state`,'INIT', {
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'text/plain',
             },
         });
 
@@ -25,7 +36,7 @@ describe('GET /state', () => {
             },
         });
         expect(res2.status).toBe(200);
-        expect(res2.data).toBe('RUNNING');
+        expect(res2.data).toBe('INIT');
 
     });
 });
@@ -53,14 +64,14 @@ describe('State transitions', () => {
         // ensure user is authenicated > state is RUNNING
         const res1 = await axios.get(`${BASE_URL_SERVICE1}/api/`, {
             headers: {
-                'Accept': 'text/plain',
+                'Accept': 'application/json',
             },
             auth: AUTH_CREDENTIALS,
         });
         // Transition to PAUSED
-        let res = await axios.put(`${BASE_URL}/state`, { state: 'PAUSED' }, {
+        let res = await axios.put(`${BASE_URL}/state`,'PAUSED', {
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'text/plain',
             },
         });
         expect(res.status).toBe(200);
@@ -74,9 +85,9 @@ describe('State transitions', () => {
         expect(res.data).toBe('PAUSED');
 
         // Transition to RUNNING
-        res = await axios.put(`${BASE_URL}/state`, { state: 'RUNNING' }, {
+        res = await axios.put(`${BASE_URL}/state`,'RUNNING', {
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'text/plain',
             },
         });
         expect(res.status).toBe(200);
