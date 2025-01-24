@@ -19,10 +19,7 @@ async function authentication() {
         });
         console.log('Authentication succeeded:', res1.status);
     } catch (error) {
-        // Tarkista, onko virhe 401
         if (error.response && error.response.status === 401) {
-            console.warn('Authentication failed with 401');
-            // Tee haluamasi toimenpiteet, jos virhe on 401
             const res1 = await axios.get(`${BASE_URL_SERVICE1}/api/`, {
                 headers: {
                     'Accept': 'text/plain',
