@@ -44,21 +44,23 @@ function updateState(req, res) {
     const receivedState = req.body
 
     if (!receivedState) {
-        return res.status(400).send({ success: false, message: 'State is required' });
+        return res.status(400).send('State is required');
     }
     if (!validStates.includes(receivedState)) {
-        return res.status(400).send({ success: false, message: `Invalid state: ${receivedState}` });
+        return res.status(400).send(`Invalid state: ${receivedState}`);
     }
 
+    checkStateInit()
+
     if (state === 'INIT' || state === receivedState) {
-        return res.status(200).send({ success: true, message: 'State remains unchanged', state });
+        return res.status(200).send(state);
     }
 
     switch (receivedState) {
         case 'SHUTDOWN':
             console.log('System is shutting down');
-            // TODO
             state = 'SHUTDOWN';
+            shutdown()
             break;
 
         case 'INIT':
@@ -72,11 +74,11 @@ function updateState(req, res) {
             break;
 
         default:
-            return res.status(400).send({ success: false, message: 'Invalid state' });
+            return res.status(400).send('Invalid state');
     }
     console.log(`Updating to: ${receivedState}`);
     updateStateLog(receivedState, '123456-dummy'); 
-    return res.status(200).send({ success: true, message: `State updated to ${state}`, state });
+    return res.status(200).send(state);
 }
 
 app.get('/state',  (req, res) => {
@@ -100,23 +102,10 @@ app.get('/auth', (req, res) => {
         res.status(200).send({ success: true, message: `State ${state}`, state });
     }
     else {
-        res.status(401).send({ success: false, message: `State ${state}`, state });
-    }
-});
-
-// Endpoint to verify state
-app.get('/auth2', (req, res) => {
-    console.log(`Verifying state... `);
-    if ( !requireReLogin || state !== "INIT"){
-        console.log(`First login or user has logged in`);
-        res.status(200).send({ success: true, message: `State ${state}`, state });
-    }
-    else {
         requireReLogin = false
         res.status(401).send({ success: false, message: `State ${state}`, state });
     }
 });
-
 
 app.put('/state', (req, res) => {
     updateState(req, res)
