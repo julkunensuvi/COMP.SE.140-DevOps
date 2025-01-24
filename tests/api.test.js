@@ -74,7 +74,7 @@ describe('State transitions', () => {
 
     it('should update state to RUNNING after processing a valid log entry with Basic Auth', async () => {
         // First request processes the log and updates the state
-        authentication()
+        await authentication()
         const res2 = await axios.get(`${BASE_URL}/state`, {
             headers: {
                 'Accept': 'text/plain',
@@ -86,7 +86,7 @@ describe('State transitions', () => {
 
     it('should update state using PUT /state', async () => {
         // ensure user is authenicated > state is RUNNING
-        authentication()
+        await authentication()
         // Transition to PAUSED
         let res = await axios.put(`${BASE_URL}/state`,'PAUSED', {
             headers: {
