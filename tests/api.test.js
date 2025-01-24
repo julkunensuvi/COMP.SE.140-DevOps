@@ -1,5 +1,6 @@
 const axios = require('axios');
 const fs = require('fs');
+const { isFloat32Array } = require('util/types');
 const BASE_URL = 'http://localhost:8197'; 
 const BASE_URL_SERVICE1 = 'http://localhost:8198'; 
 
@@ -7,6 +8,34 @@ const AUTH_CREDENTIALS = {
     username: 'test',
     password: 'Kahvikuppi',
 };
+
+async function authentication() {
+    try {
+        const res1 = await axios.get(`${BASE_URL_SERVICE1}/api/`, {
+            headers: {
+                'Accept': 'text/plain',
+            },
+            auth: AUTH_CREDENTIALS,
+        });
+        console.log('Authentication succeeded:', res1.status);
+    } catch (error) {
+        // Tarkista, onko virhe 401
+        if (error.response && error.response.status === 401) {
+            console.warn('Authentication failed with 401');
+            // Tee haluamasi toimenpiteet, jos virhe on 401
+            const res1 = await axios.get(`${BASE_URL_SERVICE1}/api/`, {
+                headers: {
+                    'Accept': 'text/plain',
+                },
+                auth: AUTH_CREDENTIALS,
+            });
+            return;
+
+        }
+        console.error('Unexpected error during authentication:', error.message);
+        throw error; // Nosta virhe, jos se ei ole 401
+    }
+}
 
 beforeEach(async () => {
     try {
@@ -16,7 +45,7 @@ beforeEach(async () => {
             },
         });
         console.log('State reset to INIT:', res.status); // Log for debugging
-    } catch (error) {
+        } catch (error) {
         console.error('Error resetting state to INIT:', error.response?.data || error.message);
     }
 });
@@ -45,12 +74,7 @@ describe('State transitions', () => {
 
     it('should update state to RUNNING after processing a valid log entry with Basic Auth', async () => {
         // First request processes the log and updates the state
-        const res1 = await axios.get(`${BASE_URL_SERVICE1}/api/`, {
-            headers: {
-                'Accept': 'text/plain',
-            },
-            auth: AUTH_CREDENTIALS,
-        });
+        authentication()
         const res2 = await axios.get(`${BASE_URL}/state`, {
             headers: {
                 'Accept': 'text/plain',
@@ -62,12 +86,7 @@ describe('State transitions', () => {
 
     it('should update state using PUT /state', async () => {
         // ensure user is authenicated > state is RUNNING
-        const res1 = await axios.get(`${BASE_URL_SERVICE1}/api/`, {
-            headers: {
-                'Accept': 'application/json',
-            },
-            auth: AUTH_CREDENTIALS,
-        });
+        authentication()
         // Transition to PAUSED
         let res = await axios.put(`${BASE_URL}/state`,'PAUSED', {
             headers: {
