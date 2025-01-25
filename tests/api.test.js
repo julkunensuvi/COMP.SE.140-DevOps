@@ -132,3 +132,19 @@ describe('GET /run-log', () => {
 
     });
 });
+
+describe('GET /request', () => {
+    it('should return service info containig service1 and service2', async () => {
+        await authentication()
+
+        const res = await axios.get(`${BASE_URL}/request`, {
+            headers: {
+                'Accept': 'text/plain',
+            },
+        });
+        expect(res.status).toBe(200);
+        expect(res.data).toContain('service1');
+        expect(res.data).toContain('service2');
+
+    });
+});
