@@ -117,3 +117,18 @@ describe('State transitions', () => {
         expect(res.data).toBe('RUNNING'); 
     });
 });
+
+describe('GET /run-log', () => {
+    it('should return run log containig state RUNNING', async () => {
+        await authentication()
+
+        const res = await axios.get(`${BASE_URL}/run-log`, {
+            headers: {
+                'Accept': 'text/plain',
+            },
+        });
+        expect(res.status).toBe(200);
+        expect(res.data).toContain('RUNNING');
+
+    });
+});
