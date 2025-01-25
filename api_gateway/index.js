@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
+
 const { parseNginxLog} = require('./helpers/logParser');
-const { resetSystem, shutdown} = require('./helpers/serviceHandler');
+const { resetSystem, shutdown, toggleNginxAccess, restartSystem, pauseSystem} = require('./helpers/serviceHandler');
 
 const PORT = 8197;
 let state = 'INIT';
@@ -40,7 +41,7 @@ function checkStateInit() {
     }
 }
 
-function updateState(req, res) {
+async function updateState(req, res) {
     const receivedState = req.body
 
     if (!receivedState) {
@@ -58,6 +59,9 @@ function updateState(req, res) {
 
     switch (receivedState) {
         case 'SHUTDOWN':
+            if(state === 'PAUSED') {
+                await toggleNginxAccess(req, res, 'allow');
+            }
             console.log('System is shutting down');
             state = 'SHUTDOWN';
             shutdown()
@@ -66,11 +70,16 @@ function updateState(req, res) {
         case 'INIT':
             console.log('Resetting system to INIT');
             requireReLogin = true
+            if(state === 'PAUSED') {
+                await toggleNginxAccess(req, res, 'allow');
+            }
             resetSystem(req, res, logFilePath);
             break;
         case 'PAUSED':
+            await toggleNginxAccess(req, res, 'deny');
             break;
         case 'RUNNING':
+            await toggleNginxAccess(req, res, 'allow');
             break;
 
         default:
