@@ -40,7 +40,8 @@ const toggleNginxAccess = async (req, res, mode) => {
 
         const configPath = '/etc/nginx/nginx.conf';
         const config = fs.readFileSync(configPath, 'utf8');
-        const updatedConfig = config.replace(/= [01]\) \{/, `= ${value}) {`);
+        //const updatedConfig = config.replace(/= [01]\) \{/, `= ${value}) {`);
+        const updatedConfig = config.replace(/set \$deny_access [0-1];/, `set $deny_access ${value};`);
         fs.writeFileSync(configPath, updatedConfig, 'utf8');
         await reloadNginx(res)
         // Always set back to initial so initial config is not lost
