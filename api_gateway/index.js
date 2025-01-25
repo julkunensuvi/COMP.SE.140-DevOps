@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const axios = require('axios');
 
 const { parseNginxLog, formatStateLog} = require('./helpers/logParser');
 const { resetSystem, shutdown, toggleNginxAccess, restartSystem, pauseSystem} = require('./helpers/serviceHandler');
@@ -98,10 +99,21 @@ app.get('/state',  (req, res) => {
     res.type('text/plain').send(state);
 });
 
-// Endpoint to handle a request
-app.get('/request', (req, res) => {
-    res.type('text/plain').send('TODO');
+app.get('/request', async (req, res) => {
+    try {
+        let payload = 'Service should be RUNNING'
+        checkStateInit()
+        if(state === 'RUNNING'){
+            response = await axios.get('http://localhost:8198/api/');
+            payload.response.data
+        }
+        res.type('text/plain').send(payload);
+    } catch (error) {
+        console.error('Error forwarding request:', error.message);
+        res.status(500).type('text/plain').send('Failed to forward request.');
+    }
 });
+
 
 // Endpoint to verify state
 app.get('/auth', (req, res) => {
