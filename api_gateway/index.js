@@ -104,8 +104,8 @@ app.get('/request', async (req, res) => {
         let payload = 'Service should be RUNNING'
         checkStateInit()
         if(state === 'RUNNING'){
-            response = await axios.get('http://localhost:8198/api/');
-            payload.response.data
+            response = await axios.get('http://nginx/api/');
+            payload = response.data
         }
         res.type('text/plain').send(payload);
     } catch (error) {
