@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-const { parseNginxLog} = require('./helpers/logParser');
+const { parseNginxLog, formatStateLog} = require('./helpers/logParser');
 const { resetSystem, shutdown, toggleNginxAccess, restartSystem, pauseSystem} = require('./helpers/serviceHandler');
 
 const PORT = 8197;
@@ -14,7 +14,7 @@ app.use(express.text());
 
 const validStates = ['INIT', 'PAUSED', 'RUNNING', 'SHUTDOWN'];
 
-function updateStateLog(newState, timestamp = '123456'){
+function updateStateLog(newState, timestamp = new Date().toISOString()){
     console.log(`Updating ${state} to: ${newState}`);
     stateLog.push({
         state,
@@ -86,7 +86,7 @@ async function updateState(req, res) {
             return res.status(400).send('Invalid state');
     }
     console.log(`Updating to: ${receivedState}`);
-    updateStateLog(receivedState, '123456-dummy'); 
+    updateStateLog(receivedState); 
     return res.status(200).send(state);
 }
 
@@ -121,7 +121,9 @@ app.put('/state', (req, res) => {
 });
 
 app.get('/run-log', (req, res) => {
-    res.type('text/plain').send("TODO");
+    checkStateInit()
+    const stateLogText = formatStateLog(stateLog);
+    res.type('text/plain').send(stateLogText);
 });
 
 app.listen(PORT, () => {

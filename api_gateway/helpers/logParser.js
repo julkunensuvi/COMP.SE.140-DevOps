@@ -24,11 +24,6 @@ const parseNginxLog = (logFilePath) => {
                         '$3-$2-$1T$4$5'
                     );
 
-                    console.log('Formatted Timestamp:', formattedTimestamp);
-                    console.log(
-                        `Authenticated user: ${username}, Path: ${path}, Time: ${formattedTimestamp}, Status: ${statusCode}`
-                    );
-
                     return { success: true, timestamp: formattedTimestamp, path };
                 }
             } else {
@@ -45,4 +40,13 @@ const parseNginxLog = (logFilePath) => {
     }
 };
 
-module.exports = { parseNginxLog };
+const formatStateLog = (log) => {
+    return log
+        .map(({ state, newState, timestamp }) => {
+            // Format timestamp to desired format
+            return `${timestamp}: ${state}->${newState}`;
+        })
+        .join('\n'); // Join all log entries with a newline
+};
+
+module.exports = { parseNginxLog, formatStateLog };
