@@ -1,21 +1,18 @@
 const fs = require('fs');
 const axios = require('axios');
-const BASE_URL_NGINX = 'http://localhost:8198'; 
 const exec = require('child_process').exec;
 
       
 
 const reloadNginx = async (res) => {
     try {
-        exec("docker exec nginx nginx -s reload", (error, stdout, stderr) => {
+        exec("docker exec nginx nginx -s reload", (error, stdout) => {
             if (error) {
                 console.error('Error reloading nginx:', error.message);
                 res.status(500).send({ success: false, message: 'Failed to reload nginx', error: error.message });
                 return;
             }
-            console.log('Nginx reloaded successfully:', stdout);
         });
-        console.log('Nginx reloaded successfully.');
     } catch (error) {
         console.error('Error reloading nginx:', error.message);
         res.status(500).send({ success: false, message: 'Failed to reload nginx', error: error.message });
@@ -25,7 +22,6 @@ const reloadNginx = async (res) => {
 const resetSystem = async (req, res, accessLogPath) => {
     try {
         fs.writeFileSync(accessLogPath, '', 'utf8');
-        console.log("Logging user out")
 
     } catch (error) {
         console.error('Error resetting system:', error.message);
@@ -55,11 +51,9 @@ const toggleNginxAccess = async (req, res, mode) => {
 
 const pauseSystem = async (req, res) => {
     try {
-        console.log('Pausing nginx container...');
         await axios.post('http://localhost/containers/nginx/stop', {}, {
             socketPath: '/var/run/docker.sock'
         });
-        console.log('nginx container has been paused.');
     } catch (error) {
         console.error('Error pausing nginx container:', error.message);
         res.status(500).send({ success: false, message: 'Failed to pause nginx container' });
@@ -68,18 +62,16 @@ const pauseSystem = async (req, res) => {
 
 const restartSystem = async (req, res) => {
     try {
-        console.log('Starting nginx container...');
         await axios.post('http://localhost/containers/nginx/start', {}, {
             socketPath: '/var/run/docker.sock'
         });
-        console.log('nginx container has been started.');
     } catch (error) {
         console.error('Error starting nginx container:', error.message);
         res.status(500).send({ success: false, message: 'Failed to start nginx container' });
     }
 };
 
-async function shutdown() {
+async function shutdown(res) {
 
     try {
             console.log('Shutting down all containers...');
@@ -94,7 +86,6 @@ async function shutdown() {
                 })
             );
             await Promise.all(stopPromises); // This doesn't really work as containers have already been shut down at this point... 
-            console.log('All containers have been stopped.');
     
         } catch (error) {
             console.error(`Error during shutdown: ${error.message}`);

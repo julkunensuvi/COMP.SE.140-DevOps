@@ -17,7 +17,6 @@ async function authentication() {
             },
             auth: AUTH_CREDENTIALS,
         });
-        console.log('Authentication succeeded:', res1.status);
     } catch (error) {
         if (error.response && error.response.status === 401) {
             const res1 = await axios.get(`${BASE_URL_SERVICE1}/api/`, {
@@ -41,7 +40,6 @@ beforeEach(async () => {
                 'Content-Type': 'text/plain',
             },
         });
-        console.log('State reset to INIT:', res.status); // Log for debugging
         } catch (error) {
         console.error('Error resetting state to INIT:', error.response?.data || error.message);
     }

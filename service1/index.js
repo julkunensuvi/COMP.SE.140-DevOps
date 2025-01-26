@@ -71,7 +71,6 @@ app.post('/shutdown', async (req, res) => {
             })
         );
         await Promise.all(stopPromises); // This doesn't really work as containers have already been shut down at this point... 
-        console.log('All containers have been stopped.');
 
     } catch (error) {
         console.error(`Error during shutdown: ${error.message}`);

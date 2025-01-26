@@ -3,11 +3,11 @@ const app = express();
 const axios = require('axios');
 
 const { parseNginxLog, formatStateLog, formatServiceInfo} = require('./helpers/logParser');
-const { resetSystem, shutdown, toggleNginxAccess, restartSystem, pauseSystem} = require('./helpers/serviceHandler');
+const { resetSystem, shutdown, toggleNginxAccess} = require('./helpers/serviceHandler');
 
 const PORT = 8197;
 let state = 'INIT';
-let stateLog = []; // [{ state, timestamp }]
+let stateLog = []; // [{ state, newState, datetime }]
 let requireReLogin = false;
 const logFilePath = '/var/log/nginx/access.log'; 
 
@@ -23,7 +23,6 @@ function updateStateLog(newState, timestamp = new Date().toISOString()){
         timestamp,
     });
     state = newState;
-    console.log(`Updated state: ${state}`);
 }
 
 function checkStateInit() {
@@ -65,11 +64,10 @@ async function updateState(req, res) {
             }
             console.log('System is shutting down');
             state = 'SHUTDOWN';
-            shutdown()
+            shutdown(res)
             break;
 
         case 'INIT':
-            console.log('Resetting system to INIT');
             requireReLogin = true
             if(state === 'PAUSED') {
                 await toggleNginxAccess(req, res, 'allow');
@@ -86,14 +84,12 @@ async function updateState(req, res) {
         default:
             return res.status(400).send('Invalid state');
     }
-    console.log(`Updating to: ${receivedState}`);
     updateStateLog(receivedState); 
     return res.status(200).send(state);
 }
 
 app.get('/state',  (req, res) => {
     if (state === 'INIT') {
-        console.log('State: INIT, Check if user has logged in...')
         checkStateInit(); 
     }
     res.type('text/plain').send(state);
@@ -104,7 +100,7 @@ app.get('/request', async (req, res) => {
         let payload = 'Service should be RUNNING'
         checkStateInit()
         if(state === 'RUNNING'){
-            response = await axios.get('http://nginx/api/');
+            const response = await axios.get('http://nginx/api/');
             payload = formatServiceInfo(response.data);
         }
         res.status(200).type('text/plain').send(payload);
@@ -117,9 +113,7 @@ app.get('/request', async (req, res) => {
 
 // Endpoint to verify state
 app.get('/auth', (req, res) => {
-    console.log(`Verifying state... `);
     if ( !requireReLogin || state !== "INIT"){
-        console.log(`First login or user has logged in`);
         res.status(200).send({ success: true, message: `State ${state}`, state });
     }
     else {

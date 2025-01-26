@@ -6,14 +6,12 @@ const parseNginxLog = (logFilePath) => {
         const logEntries = logData.split('\n').filter(line => line.trim() !== '');
 
         for (const line of logEntries) {
-            console.log('Line:', line);
 
             const match = line.match(
                 /(\S+) - \[(\d+\/\w+\/\d+:\d+:\d+:\d+ \+\d+)\] "GET (\/[^\s]*) HTTP\/1\.1" (\d+)/
             );
 
             if (match) {
-                const username = match[1]; // E.g., 'test' or '-'
                 const rawTimestamp = match[2]; // E.g., '19/Jan/2025:10:47:42 +0000'
                 const path = match[3]; // E.g., '/' or '/api/'
                 const statusCode = match[4]; // E.g., '200'
