@@ -10,3 +10,14 @@ target/
 
 .vscode/
 
+# Logs
+logs/
+*.log
+nginx_logs/
+
+# Build directories
+builds/
+dist/
+
+# Git
+.gitignore
