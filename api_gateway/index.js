@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const axios = require('axios');
 
-const { parseNginxLog, formatStateLog} = require('./helpers/logParser');
+const { parseNginxLog, formatStateLog, formatServiceInfo} = require('./helpers/logParser');
 const { resetSystem, shutdown, toggleNginxAccess, restartSystem, pauseSystem} = require('./helpers/serviceHandler');
 
 const PORT = 8197;
@@ -105,7 +105,7 @@ app.get('/request', async (req, res) => {
         checkStateInit()
         if(state === 'RUNNING'){
             response = await axios.get('http://nginx/api/');
-            payload = response.data
+            payload = formatServiceInfo(response.data);
         }
         res.type('text/plain').send(payload);
     } catch (error) {

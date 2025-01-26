@@ -49,4 +49,23 @@ const formatStateLog = (log) => {
         .join('\n'); // Join all log entries with a newline
 };
 
-module.exports = { parseNginxLog, formatStateLog };
+const formatServiceInfo = (jsonData) => {
+    const services = Object.entries(jsonData)
+        .map(([service, details]) => {
+            const processes = details.processes
+                .map(proc => `    - pid: ${proc.pid}, tty: ${proc.tty}, stat: ${proc.stat}, time: ${proc.time}, cmd: ${proc.cmd}`)
+                .join('\n');
+            return `
+                ${service}:
+                ip_address: ${details.ip_address}
+                uptime: ${details.uptime}
+                disk_space: ${details.disk_space}
+                processes:
+                ${processes}
+                            `;
+                        })
+                        .join('\n');
+    return services
+};
+
+module.exports = { parseNginxLog, formatStateLog, formatServiceInfo };
