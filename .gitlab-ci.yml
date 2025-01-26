@@ -1,5 +1,6 @@
 stages:
   - build
+  - lint
   - test
   - deploy
 
@@ -8,6 +9,13 @@ build:
   script:
     - echo "Building containers..."
     - docker-compose build
+
+lint:
+  stage: lint
+  script:
+    - echo "Running ESLint..."
+    - npm install
+    - npx eslint "**/*.js" --max-warnings=0   
 
 test:
   stage: test
