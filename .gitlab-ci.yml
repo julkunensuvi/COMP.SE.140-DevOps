@@ -6,13 +6,13 @@ stages:
 build:
   stage: build
   script:
-    - echo "Building..."
+    - echo "Building containers..."
     - docker-compose build
 
 test:
   stage: test
   before_script:
-    - echo "Docker Compose up..."
+    - echo "Starting services..."
     - docker-compose up -d  
     - npm install           
   script:
@@ -25,4 +25,5 @@ test:
 deploy:
   stage: deploy
   script:
-    - echo "Deploying..."
+    - echo "Deploying application to local machine..."
+    - docker-compose up -d
