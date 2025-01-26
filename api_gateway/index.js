@@ -107,7 +107,7 @@ app.get('/request', async (req, res) => {
             response = await axios.get('http://nginx/api/');
             payload = formatServiceInfo(response.data);
         }
-        res.type('text/plain').send(payload);
+        res.status(200).type('text/plain').send(payload);
     } catch (error) {
         console.error('Error forwarding request:', error.message);
         res.status(500).type('text/plain').send('Failed to forward request.');
