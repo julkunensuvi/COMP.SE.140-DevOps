@@ -6,7 +6,7 @@ const exec = require('child_process').exec;
 
 const reloadNginx = async (res) => {
     try {
-        exec("docker exec nginx nginx -s reload", (error, stdout) => {
+        exec("docker exec nginx nginx -s reload", (error) => {
             if (error) {
                 console.error('Error reloading nginx:', error.message);
                 res.status(500).send({ success: false, message: 'Failed to reload nginx', error: error.message });

@@ -3,7 +3,6 @@ const axios = require('axios');
 const cors = require('cors');
 const { execSync } = require('child_process');
 const app = express();
-const { exec } = require('child_process');
 const PORT = 8199;
 
 // Openai: Helper function to clean and format the processes list
@@ -53,6 +52,7 @@ app.get('/',  async (req, res) => {
             console.log('Ready for a request');
           }, 2000);
     } catch (error) {
+        console.log(error)
         res.status(500).json({ error: 'Failed to connect to Service2' });
     }
 });

@@ -1,6 +1,5 @@
+/* eslint-env jest */
 const axios = require('axios');
-const fs = require('fs');
-const { isFloat32Array } = require('util/types');
 const BASE_URL = 'http://localhost:8197'; 
 const BASE_URL_SERVICE1 = 'http://localhost:8198'; 
 
@@ -11,7 +10,7 @@ const AUTH_CREDENTIALS = {
 
 async function authentication() {
     try {
-        const res1 = await axios.get(`${BASE_URL_SERVICE1}/api/`, {
+        await axios.get(`${BASE_URL_SERVICE1}/api/`, {
             headers: {
                 'Accept': 'text/plain',
             },
@@ -19,7 +18,7 @@ async function authentication() {
         });
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            const res1 = await axios.get(`${BASE_URL_SERVICE1}/api/`, {
+            await axios.get(`${BASE_URL_SERVICE1}/api/`, {
                 headers: {
                     'Accept': 'text/plain',
                 },
@@ -35,7 +34,7 @@ async function authentication() {
 
 beforeEach(async () => {
     try {
-        const res = await axios.put(`${BASE_URL}/state`, 'INIT', {
+        await axios.put(`${BASE_URL}/state`, 'INIT', {
             headers: {
                 'Content-Type': 'text/plain',
             },
@@ -48,7 +47,7 @@ beforeEach(async () => {
 describe('GET /state', () => {
     it('should return the initial state as INIT', async () => {
 
-        const res = await axios.put(`${BASE_URL}/state`,'INIT', {
+        await axios.put(`${BASE_URL}/state`,'INIT', {
             headers: {
                 'Content-Type': 'text/plain',
             },
